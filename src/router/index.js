@@ -1,44 +1,56 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import HelloWorld from '@/components/HelloWorld'
+import Home from '@/components/tabbar/home'
 import Login from '@/components/login/login'
-import Main from '@/components/main/main'
-import Home from '@/components/home/home'
-import Goods from 'base/goods/goods'
-import UserList from '@/components/userlist/userlist'
-import userEdit from 'base/userEdit/userEdit'
+import GoodsDetail from '@/components/goods/goodsDetail'
+import BargainList from '@/components/tabbar/bargainList'
+import ErweimaList from '@/components/erweima/erweimaList'
+import ErweimaDetail from '@/components/erweima/erweimaDetail'
+import Bargain from '@/components/bargain/bargain'
+import BargainFriends from '@/components/bargain/bargainFriends'
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect:'/home'
+    },
+    {
+      path: '/home',
+      component: Home
     },
     {
       path: '/login',
       component: Login
     },
     {
-      path: '/main',
-      component: Main,
-      children: [
-        {
-          path: 'home',
-          component: Home
-        },
-        {
-          path: 'goods',
-          component: Goods
-        },
-        {
-          path: 'userlist',
-          component: UserList
-        },
-        {
-          path: 'userlist/edit/:id',
-          component: userEdit
-        }
-      ]
+      path:'/goodsDetail/:id',
+      component: GoodsDetail
+    },
+    {
+      path:'/bargainList/:status',
+      component: BargainList
+    },
+    {
+      path:'/erweimaList',
+      component: ErweimaList
+    },
+    {
+      path:'/erweimaList/erweimaDetail/:bargainId',
+      component: ErweimaDetail
+    },
+    {
+      path:'/bargain/:id',
+      component: Bargain
+    },
+    {
+      path:'/bargainFriends/:bargainId/:id/:openId/:endTime',
+      component:BargainFriends
     }
-  ]
-})
+  ],
+  linkActiveClass: "mui-active",
+  // history	:true
+})  

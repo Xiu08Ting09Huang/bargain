@@ -1,0 +1,118 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+ <title>微信WeixinJSBridge API</title>
+ <meta charset="utf-8" />
+ <script type="text/javascript">
+ (function(){
+ var a=document.getElementsByTagName("html")[0];
+ window.Session={appDomain:a.getAttribute("data-app-domain")||"",staticDomain:a.getAttribute("data-static-domain")||""}
+ })();
+
+ window.registNS=function(fullNS,isIgnorSelf){
+ var reg=/^[_$a-z]+[_$a-z0-9]*/i;var nsArray=fullNS.split(".");
+ var sEval="";
+ var sNS="";
+ var n=isIgnorSelf?nsArray.length-1:nsArray.length;
+ for(var i=0;i<n;i++){
+ if(!reg.test(nsArray[i])){throw new Error("Invalid namespace:"+nsArray[i]+"");
+ return
+ }
+ if(i!=0){sNS+="."}
+ else {
+    sNS+=nsArray[i];
+ sEval+="if(typeof("+sNS+")=='undefined') "+sNS+"=new Object();
+ }
+ 
+ if(sEval!=""){
+ return eval(sEval)
+ }
+ return{}
+
+ };
+
+ </script>
+ </head>
+ <body>
+ <section class="mod-page-body">
+ <div class="mod-page-main wordwrap clearfix">
+ <div class="mod-pageheader"></div>
+ <div class="mod-pagecontent">
+ <div class="mod-weixinjsapi">
+ <div class="x-desc">
+ 微信客户端自带的Js Api：WeixinJSBridge
+ </div>
+ <div id="WeixinJsApi">
+ <input type="button" id="imagePreview" value="图片预览" />
+ <input type="button" id="profile" value="查看profile" />
+ <a href="weixin://profile/gh_412d74fbb474">企业微信小助手</a>
+ <input type="button" id="shareWeibo" value="分享微博" />
+ <input type="button" id="shareFB" value="分享facebook" />
+ <input type="button" id="addContact" value="添加联系人" />
+ <input type="button" id="scanQRCode" value="扫描二维码" />
+ <input type="button" id="jumpToBizProfile" value="跳转到指定公众账号页面" />
+ <input type="button" id="toggleMenuBtn" value="隐藏右上角按钮" />
+ <input type="button" id="toggleToolbar" value="隐藏底部导航栏" />
+ <input type="button" id="getNetType" value="获取网络状态" />
+ <input type="button" id="closeWindow" value="关闭" />
+ <input type="button" id="getBrandWCPayRequest" value="发起公众号微信支付" />
+ <input type="button" id="setPageState" value="设置页面状态" />
+ <input type="button" id="sendEmail" value="发邮件" />
+ <input type="button" id="openSpecificView" value="微信团队打开webView,跳到指定页面" />
+ <input type="button" id="getCanIAPPay" value="getCanIAPPay" />
+ <input type="button" id="getBrandIAPPayRequest" value="发起公众号IAP支付" />
+ <input type="button" id="openUrlByExtBrowser" value="用safari打开指定链接" />
+ <input type="button" id="openProductView" value="跳转微信商品页" />
+ <input type="button" id="openLocation" value="查看地理位置" />
+ <input type="button" id="timelineCheckIn" value="朋友圈签到" />
+ <input type="button" id="getBrandWCPayCreateCreditCardRequest" value="开通微信信用卡" />
+ <input type="button" id="geoLocation" value="获取地理位置" />
+ <input type="button" id="getInstallState" value="获取某app是否安装" />
+ <input type="button" id="editAddress" value="公众号编辑收货地址" />
+ <input type="button" id="getLatestAddress" value="公众号获取最近的收货地址" />
+ <input type="button" id="launch3rdApp" value="启动第三方APP" />
+ <input type="button" id="jumpWCMall" value="跳转微信商品购买界面" />
+ <input type="button" id="addEmoticon" value="添加表情" />
+ <input type="button" id="cancelAddEmoticon" value="取消下载某表情" />
+ <input type="button" id="hasEmoticon" value="查询是否存在某表情" />
+ </div>
+ </div>
+ </div>
+ </div>
+ </section>
+ <script>
+ function onBridgeReady() {
+ WeixinJSBridge.on('menu:share:appmessage', function(argv)
+ {
+ WeixinJSBridge.invoke('sendAppMessage',{
+ "link":"http://m.exmail.qq.com/",
+ "desc":"desc",
+ "title":"title for WeiXinJsBridge"
+ }, function(res) {
+ WeixinJSBridge.log(res.err_msg);
+ });
+ });
+ WeixinJSBridge.on('menu:share:timeline', function(argv)
+ {
+ WeixinJSBridge.invoke("shareTimeline",{
+ "link":"http://m.exmail.qq.com",
+ "img_url":"http://rescdn.qqmail.com/bizmail/zh_CN/htmledition/images/bizmail/v3/logo1ca3fe.png",
+ "img_width":"172",
+ "img_height":"40",
+ "desc":"i am description",
+ "title":"just test from WeixinJsBridge"
+ },
+ function(e){
+ alert(e.err_msg);
+ })
+ });
+ }
+
+ if (typeof WeixinJSBridge === "undefined"){
+ if (document.addEventListener){
+ document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+ }
+ }else{
+ onBridgeReady();
+ }
+}
