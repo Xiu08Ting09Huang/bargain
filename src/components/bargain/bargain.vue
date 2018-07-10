@@ -321,6 +321,10 @@ export default {
               console.log(res)
               if(res.data.code == 200){
                 this.linquShow = true
+              }else if(res.data.code == 10015){
+                this.mui.alert('已生成核销码，到我的核销码中查看','提示',()=>{
+                  this.$router.push('/erweimaList')
+                })
               }
           })
         },

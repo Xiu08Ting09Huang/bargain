@@ -112,7 +112,7 @@ export default {
       this.pageIndex++ 
       this.getData(this.pageIndex,this.pageSize)
     },
-    // 倒计时结束后执行的函数     换别名提交
+    // 倒计时结束后执行的函数     
     countDownE_cb: function (x) {
     
     }
