@@ -124,7 +124,8 @@ export default {
            // code: window.location.search.slice(1).split('&')[0].split("=")[1],
             invitedUserOpenId:localStorage.getItem('invitedUserOpenId'),
             end : window.location.hash.split('#')[1].split("/")[5],
-            flag:localStorage.getItem('flag')
+            flag:localStorage.getItem('flag'),
+            openId:localStorage.getItem('openId')
         }
     },
   components: {
@@ -133,7 +134,7 @@ export default {
     methods:{
         // 获取code
         getcode(){
-            if(this.invitedUserOpenId == null || this.invitedUserOpenId == '' || this.$store.state.openId == ''  ){
+            if(this.invitedUserOpenId == null || this.invitedUserOpenId == '' || this.openId == ''  ){
                 if(this.flag != 0){
                     localStorage.setItem('flag',0)
                     window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd8e37fb96f38f963&redirect_uri=https%3a%2f%2ftango007.heeyhome.com%2f%23%2fbargainFriends%2f'+ window.location.hash.split('#')[1].split("/")[2] +'%2f'+ window.location.hash.split('#')[1].split("/")[3] +'%2f'+window.location.hash.split('#')[1].split("/")[4] + '%2f' + window.location.hash.split('#')[1].split("/")[5] +  '%2f&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
@@ -153,11 +154,15 @@ export default {
                 }) 
             } else{
                 userLogin({
-                    userOpenId:this.invitedUserOpenId || this.$store.state.openId
+                    userOpenId:this.invitedUserOpenId || this.openId
                 }).then(res => {
                      console.log(res)
                     if(res.data.code == 200){
-                        // 这边先留着----
+                        // 这边先留着----做二次存储用
+                        this.invitedUserOpenId = res.data.data.user.userOpenId;
+                        localStorage.setItem('invitedUserOpenId',res.data.data.user.userOpenId)
+                        localStorage.setItem('headerImg',res.data.data.user.userHeadImage)
+                        localStorage.setItem('userName',res.data.data.user.userName)
                     }else {
                         //  localStorage.setItem('flag',1)
                         if(this.flag != 1){
@@ -244,7 +249,7 @@ export default {
            cutGoods({
                 id: window.location.hash.split('#')[1].split("/")[3],
                 invitedUserOpenId: window.location.hash.split('#')[1].split("/")[4],
-                userOpenId: this.invitedUserOpenId || this.$store.state.openId,
+                userOpenId: this.invitedUserOpenId || this.openId,
                 bargainId: window.location.hash.split('#')[1].split("/")[2]
             })
             .then(res => {
@@ -291,6 +296,7 @@ export default {
                     this.goodsInfo = res.data.data;
                     this.percentage = this.goodsInfo.cutPrice/(this.goodsInfo.goodsPrice-this.goodsInfo.goodsLowPrice) * 100
                     if(this.percentage >= 100){
+                         this.percentage = 100
                         this.cutSuccsess = true
                     }else{
                         this.cutSuccsess = false

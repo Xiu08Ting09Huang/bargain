@@ -82,7 +82,7 @@ export default {
               v.status = "未核销";
             } else if (v.status == 5) {
               v.status = "已核销";
-            } else if (v.state == 6) {
+            } else if (v.status == 6) {
               v.status = "已过期";
             }
           });

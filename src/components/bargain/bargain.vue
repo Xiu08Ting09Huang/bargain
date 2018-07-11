@@ -176,7 +176,13 @@ export default {
             }).then(res => {
                console.log(res)
               if(res.data.code == 200){
-                //这边先留着---
+                //这边先留着---二次存储
+                localStorage.setItem('headerImg',res.data.data.user.userHeadImage)
+                localStorage.setItem('openId',res.data.data.user.userOpenId)
+                localStorage.setItem('userName',res.data.data.user.userName)
+                this.openId = res.data.data.user.userOpenId
+                this.headerImg = res.data.data.user.userHeadImage
+                this.getCutFrist(res.data.data.user.userOpenId)
               }else {
                 userLogin({
                   jsCode: this.code
@@ -236,6 +242,7 @@ export default {
                     this.goodsInfo = ress.data.data;
                     this.percentage = this.goodsInfo.cutPrice/(this.goodsInfo.goodsPrice-this.goodsInfo.goodsLowPrice) * 100
                       if(this.percentage >= 100){
+                        this.percentage = 100
                         this.cutSuccsess = true
                       }else{
                         this.cutSuccsess = false
@@ -244,8 +251,8 @@ export default {
                     this.mui.alert('还没发起砍价')
                 } else if (ress.data.code == 10018){
                     this.mui.alert('活动已结束，请确认','提示',()=>{
-                        this.$router.push('/home'),
-                        localStorage.setItem('openId',this.invitedUserOpenId)
+                        this.$router.push('/home')
+                        // localStorage.setItem('openId',this.invitedUserOpenId)
                     })
                 } 
             })
@@ -316,7 +323,7 @@ export default {
             bargainId: JSON.parse(localStorage.getItem("shopBargainID")),
             id: +this.$route.params.id,
             code:this.$store.state.token,
-            userOpenId: this.$store.state.openId
+            userOpenId: this.openId
           }).then(res =>{
               console.log(res)
               if(res.data.code == 200){
@@ -324,6 +331,10 @@ export default {
               }else if(res.data.code == 10015){
                 this.mui.alert('已生成核销码，到我的核销码中查看','提示',()=>{
                   this.$router.push('/erweimaList')
+                })
+              }else if(res.data.code == 221){
+                this.mui.alert('已过期无法生成二维码，请确认','提示',()=>{
+                  this.$router.push('/bargainList/underfined')
                 })
               }
           })
